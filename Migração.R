@@ -1,0 +1,42 @@
+rm(list = ls())
+
+pacman::p_load('stringr', "tidyr", "dplyr")
+
+df <-readxl::read_xlsx("C:/Users/thiago.oliveira/OneDrive/Área de Trabalho/migracao/API_ReboucasFernandesDeLimaLorena_EHRs.xlsx")
+
+dfFinal <- data.frame()%>%
+  mutate("ID", "Nome", "Data", "Anamnese")
+
+linhas <- nrow(df)
+colunas <- ncol(df)
+l = 1
+x = 0
+
+while(l <= linhas){
+  c = 1
+  while(c<=colunas){
+    if(is.na(df[l,c]) == FALSE){
+      x = x + 1
+      celula <- df[l,c][[1]]
+      splitID <- strsplit(celula, split = "patientId")
+      splitDate <- strsplit(splitID[[1]][2], split = "'date':")
+      dfFinal[x,1] <- splitDate[[1]][1]
+      splitStatus <- strsplit(splitDate[[1]][2], split = "'status':")
+      dfFinal[x,3] <- splitStatus[[1]][1]
+      
+      if(str_detect(celula, "'value':") == TRUE){
+        splitValue <- strsplit(celula, split = "'value':")
+        splitSequenceNumber <- strsplit(splitValue[[1]][2], split = "'sequenceNumber':")
+        dfFinal[x,4] <- splitSequenceNumber[[1]][1]
+      }
+      
+      
+    }
+    c = c + 1
+  }
+  l = l + 1
+}
+
+writexl::write_xlsx(dfFinal, "C:/Users/thiago.oliveira/OneDrive/Área de Trabalho/migracao/Lorena Rebouças-EHR.xlsx")
+
+
