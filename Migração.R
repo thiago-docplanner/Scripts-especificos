@@ -2,8 +2,10 @@ rm(list = ls())
 
 pacman::p_load('stringr', "tidyr", "dplyr")
 
-df <-readxl::read_xlsx("C:/Users/thiago.oliveira/OneDrive/Área de Trabalho/migracao/API_ReboucasFernandesDeLimaLorena_EHRs.xlsx")
+path <- "C:/Users/thiago.oliveira/Downloads/API_SalesJoaoFelipe_EHRs.xlsx"
 
+df <-readxl::read_xlsx(path)
+df = data.frame(lapply(df, as.character), stringsAsFactors=FALSE)
 dfFinal <- data.frame()%>%
   mutate("ID", "Nome", "Data", "Anamnese")
 
@@ -37,6 +39,6 @@ while(l <= linhas){
   l = l + 1
 }
 
-writexl::write_xlsx(dfFinal, "C:/Users/thiago.oliveira/OneDrive/Área de Trabalho/migracao/Lorena Rebouças-EHR.xlsx")
+writexl::write_xlsx(dfFinal, path)
 
 
